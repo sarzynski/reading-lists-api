@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :book do
-    title { Faker::StarWars.character }
-    author { Faker::StarWars.character }
+    title { Faker::Lorem.words(number: 2) }
+    author { Faker::Lorem.words(number: 2) }
     read { false }
-    book_id { nil }
+    list_id { nil }
     end
 end
