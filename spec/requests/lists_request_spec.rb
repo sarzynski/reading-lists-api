@@ -30,11 +30,10 @@ RSpec.describe 'Lists', type: :request do
         expect(response).to have_http_status(200)
       end
     end
-  end
-=begin
+
     context 'when the record does not exist' do
       let(:list_id) { 0 }
-    
+
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
@@ -43,7 +42,8 @@ RSpec.describe 'Lists', type: :request do
         expect(response.body).to match(/Couldn't find List/)
       end
     end
-=end
+  end
+
   describe 'POST /lists' do
     let(:valid_attributes) { { name: 'Lista', created_by: '1' } }
 
@@ -58,8 +58,7 @@ RSpec.describe 'Lists', type: :request do
         expect(response).to have_http_status(201)
       end
     end
-  end
-=begin
+
     context 'when the request is invalid' do
       before { post '/lists', params: { name: 'Ksiazki'} }
 
@@ -67,11 +66,12 @@ RSpec.describe 'Lists', type: :request do
         expect(response).to have_http_status(422)
       end
 
-      it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find List/)
+      it 'returns a failure message' do
+        expect(response.body).to match(/Validation failed: Created by can't be blank/)
       end
     end
-=end
+  end
+
   describe 'PUT /lists/:id' do
     let(:valid_attributes) { { name: 'Ksiazki'} }
 
