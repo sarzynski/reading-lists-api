@@ -1,13 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Books API', type: :request do
-  let!(:list) { create(:list) }
+  let(:user) { create(:user) }
+  let!(:list) { create(:list, created_by: user.id) }
   let!(:books) { create_list(:book, 20, list_id: list.id) }
   let(:list_id) { list.id }
   let(:id) { books.first.id }
+  let(:headers) { valid_headers }
 
   describe 'GET /lists/:list_id/books' do
-    before { get "/lists/#{list_id}/books" }
+    before { get "/lists/#{list_id}/books", params: {}, headers: headers }
 
     context 'when list exists' do
       it 'returns status code 200' do
@@ -33,7 +35,7 @@ RSpec.describe 'Books API', type: :request do
   end
 
   describe 'GET /lists/:list_id/books/:id' do
-    before { get "/lists/#{list_id}/books/#{id}" }
+    before { get "/lists/#{list_id}/books/#{id}", params: {}, headers: headers }
 
     context 'when list books exists' do
       it 'returns status code 200' do
@@ -59,10 +61,10 @@ RSpec.describe 'Books API', type: :request do
   end
 
   describe 'POST /lists/:list_id/books' do
-    let(:valid_attributes) { { title: 'Capital', author: 'Karl Marx', read: false } }
+    let(:valid_attributes) { { title: 'Capital', author: 'Karl Marx', read: false }.to_json }
 
     context 'when request attributes are valid' do
-      before { post "/lists/#{list_id}/books", params: valid_attributes }
+      before { post "/lists/#{list_id}/books", params: valid_attributes, headers: headers }
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -70,7 +72,7 @@ RSpec.describe 'Books API', type: :request do
     end
 
     context 'when an invalid request' do
-      before { post "/lists/#{list_id}/books", params: {} }
+      before { post "/lists/#{list_id}/books", params: {}, headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -83,9 +85,9 @@ RSpec.describe 'Books API', type: :request do
   end
 
   describe 'PUT /lists/:list_id/books/:id' do
-    let(:valid_attributes) { { title: 'Ksiazka' } }
+    let(:valid_attributes) { { title: 'Ksiazka' }.to_json }
 
-    before { put "/lists/#{list_id}/books/#{id}", params: valid_attributes }
+    before { put "/lists/#{list_id}/books/#{id}", params: valid_attributes, headers: headers }
 
     context 'when book exists' do
       it 'returns status code 204' do
@@ -112,7 +114,7 @@ RSpec.describe 'Books API', type: :request do
   end
 
   describe 'DELETE /lists/:id' do
-    before { delete "/lists/#{list_id}/books/#{id}" }
+    before { delete "/lists/#{list_id}/books/#{id}", headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

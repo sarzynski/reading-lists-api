@@ -2,12 +2,12 @@ class ListsController < ApplicationController
   before_action :set_list, only: [:show, :update, :destroy]
 
   def index
-    @lists = List.all
+    @lists = current_user.lists
     json_response(@lists)
   end
 
   def create
-    @list = List.create!(list_params)
+    @list = current_user.lists.create!(list_params)
     json_response(@list, :created)
   end
 
@@ -28,7 +28,7 @@ class ListsController < ApplicationController
   private
 
   def list_params
-    params.permit(:name, :created_by)
+    params.permit(:name)
   end
 
   def set_list
