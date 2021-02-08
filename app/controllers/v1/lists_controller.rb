@@ -3,7 +3,7 @@ module V1
     before_action :set_list, only: [:show, :update, :destroy]
 
     def index
-      @lists = current_user.lists
+      @lists = current_user.lists.paginate(page: params[:page], per_page: 20)
       json_response(@lists)
     end
 
